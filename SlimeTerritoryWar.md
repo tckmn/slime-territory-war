@@ -23,6 +23,12 @@ The arena will be a square board (currently 8x8, but this may change in the futu
     
 Slime is represented by the numbers 1 through 4 (players 1 to 4), and empty space is represented by a dot (`.`). Initially, the board starts out as all empty space except for a single unit of player 1's slime in the top left corner, player 2 in the top right, player 3 in the bottom left, and player 4 in the bottom right.
 
+Coordinates are represented by 0-based row and column index, for readability in the code. For example, the coordinates (3, 6) represent the 7th square in the 4th row (in the above example, a `4`). (This makes it easier to access squares: `board[coords.x][coords.y]`.) Here's a visual illustration:
+
+    (0, 0) (0, 1) (0, 2)
+    (1, 0) (1, 1) (1, 2)
+    (2, 0) (2, 1) (2, 2)
+
 ## Input
 
 Your program's input will be which player you are (1, 2, 3, or 4), a comma (`,`), then the content of the board / arena (with newlines replaced with commas). For example, if you were player 3 in the above scenario, your input would be:
@@ -31,7 +37,7 @@ Your program's input will be which player you are (1, 2, 3, or 4), a comma (`,`)
 
 ## Output
 
-Your program must output 4 integers. The first two are the X and Y coordinates of the slime you would like to move, and the next two are the X and Y coordinates of where you want to move them.
+Your program must output 4 integers. The first two are the row and column index respectively of the slime you would like to move, and the next two are the row and column index of where you want to move them.
 
 There are three choices you have on each turn: Spread out, jump, or merge.
 
