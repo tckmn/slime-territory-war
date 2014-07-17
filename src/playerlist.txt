@@ -1,0 +1,5 @@
+ruby players/Simplebot/simplebot.rb
+ruby  players/Simplebot/simplebot.rb
+ruby   players/Simplebot/simplebot.rb
+ruby    players/Simplebot/simplebot.rb
+ruby     players/Simplebot/simplebot.rb
