@@ -117,7 +117,7 @@ In your entry, please include:
 
 ## Controller code / testing
 
-The controller code is written in C++, and [can be found on Github](http://google.com/). Further instructions on how to run and test your code can be found there.
+The controller code is written in C++, and [can be found on Github](https://github.com/KeyboardFire/slime-territory-war). Further instructions on how to run and test your code can be found there.
 
 ## Various rules
 
