@@ -111,21 +111,9 @@ When all squares on the board are filled, the game ends and scores are calculate
 
 At the end of the tournament, the scores from all games will be added up to calculate each player's final score, which will be posted on the leaderboard.
 
-## Submitting an entry
+## Rules and constraints
 
-In your entry, please include:
-
-- A shell command to run your program (for example, `java MyBot.java`, `ruby MyBot.rb`, `python3 MyBot.py`, etc.).
- - Note that the input (your player and map) will be appended to this as a command line argument.
- - Programs will be tested on Ubuntu 14.04, so make sure your code can be run on it.
-- Your bot's code.
-- Instructions on how to compile the code, if necessary.
-
-## Controller code / testing
-
-The controller code is written in C++, and [can be found on Github](https://github.com/KeyboardFire/slime-territory-war). Further instructions on how to run and test your code can be found there.
-
-## Various rules
+Additional rules are:
 
 - You may read and write files within your own folder in order to persist data (submissions will be stored in `players/YourBotName/yourBotName.language`), but you may not modify or access anything else outside of it. Internet access is prohibited.
 - Your submission may not be coded specifically to help or hurt another submission. (You may have multiple submissions, but they must not specifically interact with each other in any way.)
@@ -135,7 +123,17 @@ The controller code is written in C++, and [can be found on Github](https://gith
 
 If your submission breaks any of these rules or doesn't follow the specification, it will be disqualified, removed from `playerlist.txt`, and the game will restart from the beginning. If your submission is disqualified, I will leave a comment on your post explaining why. Otherwise, your submission will be added to the leaderboard. (If you don't see your submission on the leaderboard, have no explanatory comment on your post, and posted your submission before the "Last updated" time below, please tell me! I may have inadvertently overlooked it.)
 
-## Example bot
+In your entry, please include:
+
+- A shell command to run your program (for example, `java MyBot.java`, `ruby MyBot.rb`, `python3 MyBot.py`, etc.).
+ - Note that the input (your player and map) will be appended to this as a command line argument.
+ - Programs will be tested on Ubuntu 14.04, so make sure your code can be run on it.
+- Your bot's code.
+- Instructions on how to compile the code, if necessary.
+
+## Controller code / testing, example bot
+
+The controller code is written in C++, and [can be found on Github](https://github.com/KeyboardFire/slime-territory-war). Further instructions on how to run and test your code can be found there.
 
 `simplebot.rb`, a very simple bot that spreads or jumps a random slime to a random location each turn, [is also posted on Github](https://github.com/KeyboardFire/slime-territory-war/blob/master/players/Simplebot/simplebot.rb).
 
