@@ -95,7 +95,7 @@ void playGame(std::vector<Player>& players) {
 	Board b;
 
 	// main loop
-	for (int i = 0; b.count('.'); i = (i + 1) % players.size()) {
+	for (int i = 0, turns = 0; b.count('.') && turns < 4 * 200; i = (i + 1) % players.size(), ++turns) {
 		// send input and get output
 		std::ostringstream oss;
 		oss << (i+1) << "," << b.str();

@@ -109,9 +109,9 @@ The controller code is written in C++, and [can be found on Github](https://gith
 
 ## Scoring and leaderboard
 
-When all squares on the board are filled, the game ends and scores are calculated. The final score of a player is the amount of squares that contain their slime at the end of the game. At the end of the tournament, the scores from all games will averaged to calculate each player's final score, which will be posted on the leaderboard.
+When all squares on the board are filled, the game ends and scores are calculated. The final score of a player is the amount of squares that contain their slime at the end of the game. If 2000 turns have passed (500 for each player) and the game still isn't over, the game will end anyway and the scores will be reported as if the game had ended.
 
-There is no submission deadline; I'll continue to update the leaderboard periodically as new submissions come in.
+At the end of the tournament, the scores from all games will averaged to calculate each player's final score, which will be posted on the leaderboard. There is no submission deadline; I'll continue to update the leaderboard periodically as new submissions come in.
 
 *4 submissions are required until a real leaderboard appears.*
 
