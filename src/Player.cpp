@@ -1,11 +1,11 @@
 #include "Player.hpp"
 
-Player::Player(std::string cmd): score(0), cmd(cmd) {
+Player::Player(std::string cmd, int id): id(id), score(0), cmd(cmd) {
 	// nothing to do here
 }
 
 CoordsLine Player::getMove(std::string input) {
-	std::string ERR_STR = "Error in submission \"" + cmd + "\": ";
+	std::string ERR_STR = "Error in submission #" + std::to_string(id) + ": ";
 	CoordsLine ERR = {{-1, -1}, {-1, -1}};
 
 	FILE* pipe = popen((cmd + " " + input).c_str(), "r");
@@ -52,6 +52,7 @@ CoordsLine Player::getMove(std::string input) {
 
 std::string Player::str() {
 	std::ostringstream oss;
-	oss << cmd << " " << score;
+	oss << id;
+	if (score) oss << " " << score;
 	return oss.str();
 }

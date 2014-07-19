@@ -1,5 +1,11 @@
-ruby players/Simplebot/simplebot.rb
-ruby  players/Simplebot/simplebot.rb
-ruby   players/Simplebot/simplebot.rb
-ruby    players/Simplebot/simplebot.rb
-ruby     players/Simplebot/simplebot.rb
+00ruby players/Simplebot/simplebot.rb
+01ruby players/Simplebot/simplebot.rb
+02ruby players/Simplebot/simplebot.rb
+03ruby players/Simplebot/simplebot.rb
+04ruby players/Simplebot/simplebot.rb
+05ruby players/Simplebot/simplebot.rb
+06ruby players/Simplebot/simplebot.rb
+07ruby players/Simplebot/simplebot.rb
+08ruby players/Simplebot/simplebot.rb
+09ruby players/Simplebot/simplebot.rb
+10ruby players/Simplebot/simplebot.rb

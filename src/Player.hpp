@@ -9,8 +9,9 @@
 
 class Player {
 public:
-	Player(std::string cmd);
+	Player(std::string cmd, int id);
 	CoordsLine getMove(std::string input);
+	int id;
 	int score;
 	std::string str();
 
