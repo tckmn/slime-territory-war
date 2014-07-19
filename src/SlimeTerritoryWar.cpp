@@ -1,4 +1,6 @@
-//#define LINUX_DEBUG
+//#define DEBUG
+#define MULTITHREADING
+#define MULTITHREADING_COUNT 4
 
 #include <iostream>
 #include <fstream>
@@ -7,11 +9,26 @@
 #include <time.h>
 #include "Player.hpp"
 #include "Board.hpp"
-#ifdef LINUX_DEBUG
-#include <unistd.h>
+#ifdef DEBUG
+#ifndef MULTITHREADING
+#include <chrono>
+#include <thread>
+#endif
+#endif
+#ifdef MULTITHREADING
+#include <chrono>
+#include <thread>
+#include <mutex>
+#ifndef MULTITHREADING_COUNT
+#define MULTITHREADING_COUNT std::thread::hardware_concurrency()
+#endif
+std::mutex matchupsMtx, coutMtx;
 #endif
 
 void playGame(std::vector<Player>& players);
+#ifdef MULTITHREADING
+void mt_playGame(std::vector< std::vector<Player> >& matchups);
+#endif
 std::vector< std::vector<Player> > getAllMatchups(std::vector<std::string> commands);
 
 int main() {
@@ -25,12 +42,25 @@ int main() {
 
 	// start playing!
 	std::vector< std::vector<Player> > matchups = getAllMatchups(commands);
+#ifdef MULTITHREADING
+	std::thread threads[MULTITHREADING_COUNT];
+	for (unsigned int i = 0; i < MULTITHREADING_COUNT; ++i) {
+		threads[i] = std::thread(mt_playGame, std::ref(matchups));
+	}
+	while (!matchups.empty()) {
+		std::this_thread::sleep_for(std::chrono::milliseconds(5000));
+	}
+	for (unsigned int i = 0; i < MULTITHREADING_COUNT; ++i) {
+		threads[i].join();
+	}
+#else
 	for (auto matchup = matchups.begin(); matchup != matchups.end(); ++matchup) {
 		playGame(*matchup);
 		for (auto p = matchup->begin(); p != matchup->end(); ++p) {
 			std::cout << p->str() << std::endl;
 		}
 	}
+#endif
 
 	return 0;
 }
@@ -54,16 +84,41 @@ void playGame(std::vector<Player>& players) {
 		// try to move (will do nothing i.e. pass if move is invalid)
 		b.move('1' + i, cl);
 
-#ifdef LINUX_DEBUG
+#ifdef DEBUG
 		std::cout << b.prettyStr() << cl.from.x << " " << cl.from.y << " " << cl.to.x << " " << cl.to.y << std::endl << std::endl;
-		usleep(10000);
+		std::this_thread::sleep_for(std::chrono::milliseconds(100));
 #endif
 	}
 
 	for (unsigned int i = 0; i < players.size(); ++i) {
 		players[i].score = b.count('1' + i);
 	}
+#ifdef MULTITHREADING
+	coutMtx.lock();
+	for (auto p = players.begin(); p != players.end(); ++p) {
+		std::cout << p->str() << std::endl;
+	}
+	coutMtx.unlock();
+#endif
 }
+
+#ifdef MULTITHREADING
+void mt_playGame(std::vector< std::vector<Player> >& mt_matchups) {
+	for (;;) {
+		// get matchup with thread safety
+		matchupsMtx.lock();
+		if (mt_matchups.empty()) {
+			matchupsMtx.unlock();
+			return;
+		}
+		std::vector<Player> matchup = mt_matchups.back();
+		mt_matchups.pop_back();
+		matchupsMtx.unlock();
+
+		playGame(matchup);
+	}
+}
+#endif
 
 std::vector< std::vector<Player> > getAllMatchups(std::vector<std::string> commands) {
 	std::vector< std::vector<Player> > matchups;

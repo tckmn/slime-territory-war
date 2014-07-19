@@ -8,8 +8,8 @@
 #define BOARD_HEIGHT BOARD_WIDTH
 #define EMPTY '.'
 
-#define max(x, y) ((x) > (y) ? (x) : (y))
-#define abs(x) ((x) < 0 ? -(x) : (x))
+#define maxn(x, y) ((x) > (y) ? (x) : (y))
+#define absn(x) ((x) < 0 ? -(x) : (x))
 
 class Board {
 public:

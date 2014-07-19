@@ -23,7 +23,7 @@ void Board::move(char player, CoordsLine movement) {
 	if (data[movement.to.x][movement.to.y] != EMPTY && data[movement.to.x][movement.to.y] != player) return;
 
 	// distance check
-	int maxDelta = max(abs(movement.from.x - movement.to.x), abs(movement.from.y - movement.to.y));
+	int maxDelta = maxn(absn(movement.from.x - movement.to.x), absn(movement.from.y - movement.to.y));
 	if (maxDelta <= 0 || maxDelta > 2) return;
 
 	// move the slime and convert adjacent slimes
