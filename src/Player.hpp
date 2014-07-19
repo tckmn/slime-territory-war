@@ -5,6 +5,7 @@
 #include <iostream>
 #include <sstream>
 #include <stdio.h>
+#include <time.h>
 #include "Coords.hpp"
 
 class Player {

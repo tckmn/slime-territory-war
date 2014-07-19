@@ -5,12 +5,15 @@ Player::Player(std::string cmd, int id): id(id), score(0), cmd(cmd) {
 }
 
 CoordsLine Player::getMove(std::string input) {
-	std::string ERR_STR = "Error in submission #" + std::to_string(id) + ": ";
+	std::string ERR_STR = "Problem in submission #" + std::to_string(id) + " (getMove): ";
 	CoordsLine ERR = {{-1, -1}, {-1, -1}};
+
+	// time how long it takes to get output to report outliers that take way too long
+	clock_t moveClock = clock();
 
 	FILE* pipe = popen((cmd + " " + input).c_str(), "r");
 	if (!pipe) {
-		std::cerr << ERR_STR << "command not found" << std::endl;
+		std::cout << ERR_STR << "command not found" << std::endl;
 		return ERR;
 	}
 
@@ -21,28 +24,32 @@ CoordsLine Player::getMove(std::string input) {
 		fclose(pipe);
 	} else {
 		if (feof(pipe)) {
-			std::cerr << ERR_STR << "no output received" << std::endl;
+			std::cout << ERR_STR << "no output received" << std::endl;
 		} else if (ferror(pipe)) {
-			std::cerr << ERR_STR << "read error" << std::endl;
+			std::cout << ERR_STR << "read error" << std::endl;
 		} else {
-			std::cerr << ERR_STR << "something very weird happened (I/O error)" << std::endl;
+			std::cout << ERR_STR << "something very weird happened (I/O error)" << std::endl;
 		}
 		fclose(pipe);
 		return ERR;
 	}
+
+	// finish timing
+	float time = ((float) clock() - moveClock) / CLOCKS_PER_SEC;
+	if (time >= 0.1) std::cout << ERR_STR << "took too long (" << time << "s)" << std::endl;
 
 	std::istringstream iss(result);
 	int outputCoords[4];
 	for (int i = 0; i < 4; ++i) {
 		iss >> outputCoords[i];
 		if (iss.eof()) {
-			std::cerr << ERR_STR << "not enough input (" << i << " of 4): " << result << std::endl;
+			std::cout << ERR_STR << "not enough input (" << i << " of 4): " << result << std::endl;
 			return ERR;
 		} else if (iss.bad()) {
-			std::cerr << ERR_STR << "error in istringstream (something weird happened): " << result << std::endl;
+			std::cout << ERR_STR << "error in istringstream (something weird happened): " << result << std::endl;
 			return ERR;
 		} else if (iss.fail()) {
-			std::cerr << ERR_STR << "parse error: " << result << std::endl;
+			std::cout << ERR_STR << "parse error: " << result << std::endl;
 			return ERR;
 		}
 	}

@@ -7,15 +7,16 @@
 #include <string>
 #include <vector>
 #include <set>
-#include <time.h>
 #include "Player.hpp"
 #include "Board.hpp"
+
 #ifdef DEBUG
 #ifndef MULTITHREADING
 #include <chrono>
 #include <thread>
 #endif
 #endif
+
 #ifdef MULTITHREADING
 #include <chrono>
 #include <thread>
@@ -24,10 +25,10 @@
 #ifndef MULTITHREADING_COUNT
 #define MULTITHREADING_COUNT std::thread::hardware_concurrency()
 #endif
-std::mutex matchupsMtx, coutMtx, cacheMtx;
+std::mutex matchupsMtx, outMtx, cacheMtx;
 #endif
 
-std::ofstream cache;
+std::ofstream out, cache;
 void playGame(std::vector<Player>& players);
 #ifdef MULTITHREADING
 void mt_playGame(std::vector< std::vector<Player> >& matchups);
@@ -35,7 +36,7 @@ void mt_onSIGINT(int _);
 #endif
 std::vector< std::vector<Player> > getAllMatchups(std::vector<std::string> commands);
 
-bool FINISHED = false;
+bool _finished = false;
 
 int main() {
 	// retrieve list of players
@@ -48,6 +49,7 @@ int main() {
 
 	// start playing!
 	std::vector< std::vector<Player> > matchups = getAllMatchups(commands);
+	out.open("out.txt", std::ios::out | std::ios::app);
 	cache.open("cache.txt", std::ios::out | std::ios::app);
 
 #ifdef MULTITHREADING
@@ -65,7 +67,7 @@ int main() {
 	sigaction(SIGINT, &handleSIGINT, NULL);
 
 	// have main thread wait until other threads finished
-	while (!FINISHED) {
+	while (!_finished) {
 		// do something just to avoid eating CPU
 		std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 	}
@@ -78,11 +80,12 @@ int main() {
 	for (auto matchup = matchups.begin(); matchup != matchups.end(); ++matchup) {
 		playGame(*matchup);
 		for (auto p = matchup->begin(); p != matchup->end(); ++p) {
-			std::cout << p->str() << std::endl;
+			out << p->str() << std::endl;
 		}
 	}
 #endif
 
+	out.close();
 	cache.close();
 	return 0;
 }
@@ -98,10 +101,7 @@ void playGame(std::vector<Player>& players) {
 		oss << (i+1) << "," << b.str();
 
 		// time how long it take to get input to report outliers that take way too long
-		clock_t moveClock = clock();
 		CoordsLine cl = players[i].getMove(oss.str());
-		float time = ((float) clock() - moveClock) / CLOCKS_PER_SEC;
-		if (time >= 0.1) std::cerr << players[i].str() << " took too long (" << time << ")" << std::endl;
 
 		// try to move (will do nothing i.e. pass if move is invalid)
 		b.move('1' + i, cl);
@@ -118,12 +118,12 @@ void playGame(std::vector<Player>& players) {
 #ifdef MULTITHREADING
 	std::ostringstream cacheTxt;
 
-	coutMtx.lock();
+	outMtx.lock();
 	for (auto p = players.begin(); p != players.end(); ++p) {
-		std::cout << p->str() << std::endl;
+		out << p->str() << std::endl;
 		cacheTxt << p->id << " ";
 	}
-	coutMtx.unlock();
+	outMtx.unlock();
 
 	std::string cacheStr = cacheTxt.str();
 	cacheStr.pop_back();
@@ -138,12 +138,12 @@ void playGame(std::vector<Player>& players) {
 void mt_playGame(std::vector< std::vector<Player> >& mt_matchups) {
 	for (;;) {
 		// ctrl+c
-		if (FINISHED) return;
+		if (_finished) return;
 
 		// get matchup with thread safety
 		matchupsMtx.lock();
 		if (mt_matchups.empty()) {
-			FINISHED = true;
+			_finished = true;
 			matchupsMtx.unlock();
 			return;
 		}
@@ -156,7 +156,7 @@ void mt_playGame(std::vector< std::vector<Player> >& mt_matchups) {
 }
 
 void mt_onSIGINT(int _) {
-	FINISHED = true;
+	_finished = true;
 }
 #endif
 
@@ -169,7 +169,6 @@ std::vector< std::vector<Player> > getAllMatchups(std::vector<std::string> comma
 	while (std::getline(iCache, line)) {
 		cached.insert(line);
 	}
-	std::cout << cached.size() << std::endl;
 
 	// disclaimer: very ugly code ahead
 	// you have been warned
@@ -190,8 +189,6 @@ std::vector< std::vector<Player> > getAllMatchups(std::vector<std::string> comma
 						matchup.push_back(Player(commands[p3].substr(2), p3i));
 						matchup.push_back(Player(commands[p4].substr(2), p4i));
 						matchups.push_back(matchup);
-					} else {
-						std::cout << "cached!" << std::endl;
 					}
 				}
 			}
