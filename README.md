@@ -1,4 +1,4 @@
 slime-territory-war
 ===================
 
-Control program for a planned King of the Hill challenge on http://codegolf.stackexchange.com
+Control program for a King of the Hill challenge: http://codegolf.stackexchange.com/questions/34851/slime-the-territory-war
